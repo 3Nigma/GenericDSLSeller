@@ -6,26 +6,13 @@
 #include <boost/regex.hpp>
 #include <exception>
 
+#include "genericproperty.hpp"
+
 class EvaluatorException : std::exception { };
 class ClassNameExistsException : std::exception { };
 class ClassDoesNotExistException : std::exception { };
 class PropertyDoesNotExistException : std::exception { };
 class CannotEvaluateClassException : std::exception { };
-
-class GenericProperty{
-public:
-  GenericProperty(const GenericProperty *gpc) : mProperty(gpc->mProperty) {}
-  GenericProperty(std::string name, double value) : mProperty(name, value) {}
-  GenericProperty(std::string name, std::string value) : mProperty(name, std::stof(value)) {}
-  bool operator==(GenericProperty &rhs) {return this->get() == rhs.get();}
-  std::tuple<std::string, double> get() {return mProperty;}
-  double getValue() {return std::get<1>(mProperty);}
-  void setValue(double newVal) {std::get<1>(mProperty) = newVal;} 
-  std::string getName() {return std::get<0>(mProperty);}
-  void set(std::tuple<std::string, double> &rhs) {mProperty = rhs;}
-protected:
-  std::tuple<std::string, double> mProperty;
-};
 
 class GenericClass{
 public:
