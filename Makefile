@@ -6,7 +6,8 @@ LDXFLAGS = -llua5.1 -lboost_regex
 OBJS = genericproperty.o \
 genericclass.o \
 genericinstance.o \
-seller.o
+seller.o \
+interpres.o
 
 %.o : %.cpp %.hpp
 	$(CPP) -c $(CXFLAGS) $< -o $@

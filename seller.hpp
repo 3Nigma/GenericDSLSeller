@@ -4,23 +4,25 @@
 #include <iostream>
 #include <list>
 #include <string>
-#include <boost/regex.hpp>
+#include "metaaction.hpp"
 #include "genericclass.hpp"
 #include "genericinstance.hpp"
+#include "interpres.hpp"
 
-class Seller{
+class Seller : public MetaAction {
 public:
-  Seller() = default;
+  Seller(const std::string &ldFile = "instruct.ld");
   ~Seller();
   
-  void addClass(GenericClass *gc);
-  void appendClassParent(GenericClass *child, const std::string &parentName);
-  GenericClass *findClass(const std::string &className);
-  GenericInstance *makeInstance(const std::string &className);
+  virtual void addClass(GenericClass *gc);
+  virtual void appendClassParent(const std::string &childName, const std::string &parentName);
+  virtual GenericClass *findClass(const std::string &className);
+  virtual GenericInstance *makeInstance(const std::string &className);
   
   void run();
 
 protected:
+  Interpres transi;
   std::list<GenericClass *> instanceClasses;
   std::list<GenericInstance *> instanceObjects;
 };
