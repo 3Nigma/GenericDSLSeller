@@ -1,9 +1,9 @@
 #ifndef _GENERICCLASS_HPP_
-#define _GENERICCLASS_HPP
+#define _GENERICCLASS_HPP_
 
-#include<string>
-#include<list>
-#include<algorithm>
+#include <string>
+#include <list>
+#include <algorithm>
 
 #include "exceptions.hpp"
 #include "genericproperty.hpp"

@@ -2,47 +2,17 @@
 #include <tuple>
 #include <list>
 #include <algorithm>
-#include <lua5.1/lua.hpp>
 #include <boost/regex.hpp>
 
 #include "exceptions.hpp"
 #include "genericproperty.hpp"
 #include "genericclass.hpp"
+#include "genericinstance.hpp"
 
-
-class GenericInstance : public GenericClass {
+class Seller{
 public:
-  GenericInstance(const GenericClass *gc) : GenericClass(gc) { }
-  virtual double evaluateRule(){
-    lua_State *lstate = luaL_newstate();
-    double evalResult = 0.0;
-
-    if(nullptr == lstate) throw EvaluatorException();
-    else{
-      std::cout << std::string("eres = ") + expandRule() << std::endl;
-      if(luaL_dostring(lstate, (std::string("eres = ") + expandRule()).c_str()) != 0){
-	lua_close(lstate);
-	throw EvaluatorException();
-      } else {
-	lua_getglobal(lstate, "eres");
-	if(lua_isnumber(lstate, -1) != 1){
-	  lua_close(lstate);
-	  throw EvaluatorException();
-	}else{
-	  evalResult = lua_tonumber(lstate, -1);
-	}
-      }
-    }
-
-    lua_close(lstate);
-    return evalResult;
-  }
-};
-
-class SellerApp{
-public:
-  SellerApp() = default;
-  ~SellerApp(){
+  Seller() = default;
+  ~Seller(){
     this->instanceClasses.clear();
     this->instanceObjects.clear();
   }
@@ -108,7 +78,7 @@ protected:
 };
 
 int main(int argc, char *argv[]){
-  SellerApp itseller;
+  Seller itseller;
   itseller.run();
   return 0;
 }

@@ -4,7 +4,8 @@ CPP = g++
 CXFLAGS = -Wall -g -std=c++0x
 LDXFLAGS = -llua5.1 -lboost_regex
 OBJS = genericproperty.o \
-genericclass.o
+genericclass.o \
+genericinstance.o
 
 %.o : %.cpp %.hpp
 	$(CPP) -c $(CXFLAGS) $< -o $@
