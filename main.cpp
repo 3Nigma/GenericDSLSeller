@@ -4,106 +4,11 @@
 #include <algorithm>
 #include <lua5.1/lua.hpp>
 #include <boost/regex.hpp>
-#include <exception>
 
+#include "exceptions.hpp"
 #include "genericproperty.hpp"
+#include "genericclass.hpp"
 
-class EvaluatorException : std::exception { };
-class ClassNameExistsException : std::exception { };
-class ClassDoesNotExistException : std::exception { };
-class PropertyDoesNotExistException : std::exception { };
-class CannotEvaluateClassException : std::exception { };
-
-class GenericClass{
-public:
-  GenericClass(const std::string &name) : mName(name){}
-  GenericClass(const GenericClass *gcCopy) : mName(gcCopy->mName), mEvalRule(gcCopy->mEvalRule) {
-    std::for_each(gcCopy->mProperties.begin(), gcCopy->mProperties.end(), [&](GenericProperty *p){
-	this->mProperties.push_back(new GenericProperty(p));
-      });
-    std::for_each(gcCopy->mParents.begin(), gcCopy->mParents.end(), [&](GenericClass *p){
-	this->mParents.push_back(new GenericClass(p));
-      });
-  }
-  virtual ~GenericClass(){ 
-    this->mProperties.clear();
-    this->mParents.clear();
-  }
-
-  std::string getName(){return mName;}
-  std::list<GenericProperty *> getProperties(){return mProperties;}
-  std::list<GenericClass *> getParents(){return mParents;}
-  void addProperty(GenericProperty *gp) {mProperties.push_back(gp);}
-  void modifyPropertyValue(const std::string &propName, double newVal){
-    bool propFound = false;
-    
-    GenericProperty *targetedProp = findDeepProperty(propName);
-    if(nullptr != targetedProp){
-      targetedProp->setValue(newVal);
-      propFound = true;
-    }
-    
-    if(!propFound) throw PropertyDoesNotExistException();
-  }
-  void addDirectParent(GenericClass *gc) {mParents.push_back(gc);}
-  void setEvalRule(std::string rule) {mEvalRule = rule;}
-
-  virtual double evaluateRule(){
-    throw CannotEvaluateClassException();
-  }
-
-protected:
-  std::list<GenericProperty *> mProperties;
-  std::string mName;
-  std::string mEvalRule;
-  std::list<GenericClass *> mParents;
-
-  GenericProperty *findDeepProperty(const std::string &pName){
-    // search in current property list
-    std::list<GenericProperty *>::iterator pFoundPropIt = 
-      std::find_if(mProperties.begin(), mProperties.end(), [&](GenericProperty *gpit){
-	return gpit->getName() == pName;
-      });
-
-    GenericProperty *pFoundProp = (*pFoundPropIt);
-    if(pFoundPropIt == mProperties.end()){
-      // if not found, search in parents property list
-      for (GenericClass *it : mParents){
-	pFoundProp = it->findDeepProperty(pName);
-	if(nullptr != pFoundProp)
-	  break;
-      }
-    }
-
-    return pFoundProp;
-  }
-  
-  std::string expandRule(){
-    std::string composedRule = mEvalRule;
-    
-    // expand parents
-    if(mParents.size() != 0){
-      std::for_each(mParents.begin(), mParents.end(), [&composedRule](GenericClass *gc){
-	  std::string parentNameToken = std::string("<") + gc->getName() + std::string(">");
-	  size_t start_pos = composedRule.find(parentNameToken);
-	  if(start_pos != std::string::npos){
-	    std::string parentRule = std::string("(") + gc->expandRule() + std::string(")");
-	    composedRule.replace(start_pos, parentNameToken.length(), parentRule);
-	  }
-	});
-    }
-    
-    // expand properties
-    std::for_each(mProperties.begin(), mProperties.end(), [&composedRule](GenericProperty *gp){
-	size_t start_pos = composedRule.find(gp->getName());
-	if(start_pos != std::string::npos){
-	  composedRule.replace(start_pos, gp->getName().length(), std::to_string(gp->getValue()));
-	}
-      });
-
-    return composedRule;
-  }
-};
 
 class GenericInstance : public GenericClass {
 public:
