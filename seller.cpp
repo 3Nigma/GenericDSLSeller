@@ -72,6 +72,30 @@ void Seller::updateClass(GenericClass *gc) {
   }
 }
 
+void Seller::listClasses(std::list<std::string> clsNames) {
+  std::cout << "***** The following classes are defined in the system : *****" << std::endl;
+  for(GenericClass *gc: instanceClasses){
+    if(clsNames.size() == 0 ||
+       std::find_if(clsNames.begin(), clsNames.end(), [&](std::string &cName){
+	   return cName == gc->getName();
+	 }) != clsNames.end())
+      std::cout << gc->inspect() << std::endl;
+  }
+  std::cout << "***** This is the end of class inspection *****" << std::endl;
+}
+
+void Seller::listInstances(std::list<std::string> instNames) {
+  std::cout << "***** The following instances are defined in the system : *****" << std::endl;
+  for(GenericInstance *go: instanceObjects){
+    if(instNames.size() == 0 ||
+       std::find_if(instNames.begin(), instNames.end(), [&](std::string &oName){
+	   return oName == go->getName();
+	 }) != instNames.end())
+      std::cout << go->inspect() << std::endl;
+  }
+  std::cout << "***** This is the end of instance inspection *****" << std::endl;
+}
+
 void Seller::run() {
   
 }

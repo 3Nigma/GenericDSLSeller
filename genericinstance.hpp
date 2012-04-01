@@ -15,7 +15,8 @@ public:
 
   virtual double evaluateRule();
   void propagateUpdatedClass(GenericClass *gc);
-  
+
+  virtual std::string inspect();
   virtual std::string getName();
   std::string getClassName();
   GenericProperty *findProperty(const std::string &name);

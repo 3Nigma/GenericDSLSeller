@@ -64,7 +64,7 @@ double GenericInstance::evaluateRule() {
   
   if(nullptr == lstate) throw EvaluatorException();
   else{
-    std::cout << std::string("eres = ") + expandRule() << std::endl;
+    //std::cout << std::string("eres = ") + expandRule() << std::endl;
     if(luaL_dostring(lstate, (std::string("eres = ") + expandRule()).c_str()) != 0){
       lua_close(lstate);
       throw EvaluatorException();
@@ -127,4 +127,19 @@ GenericProperty *GenericInstance::findDeepProperty(const std::string &pName) {
   }
   
   return pFoundProp;
+}
+
+std::string GenericInstance::inspect() {
+  std::string result = std::string(" >> '") + 
+    this->getName() + 
+    std::string("' instance of class '") +
+    this->getClassName() +
+    std::string("' with the following properties : \n");
+  
+  for(GenericProperty *gp : this->mProperties)
+    result += std::string("+ ") + gp->getName() + std::string(" = ") + std::to_string(gp->getValue()) + std::string("\n");
+  result += std::string("Evaluates with : '") + this->getEvalRule() + std::string("' = ") + std::to_string(this->evaluateRule());
+  result += std::string("\n");
+
+  return result;
 }

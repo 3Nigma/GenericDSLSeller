@@ -23,3 +23,9 @@ update instance myHouseInsurance setting property values : crisisMargin(1000)
 - Reevaluate the objects
 evaluate myHouseInsurance
 evaluate myDaciaInsurance
+
+- Listing operations
+list all classes
+list all instances
+list following classes : MansionInsurance, CarInsurance
+list following instances : myDaciaInsurance

@@ -150,6 +150,45 @@ Interpres::Interpres() {
       
       return false;
     });
+
+  // parse listing of classes/objects
+  checkers.push_back([](const std::string &instr, MetaAction *env)->bool {
+      boost::regex c("list +(all|following) +(instance|class)e?s? *(?:\\: *(.+))?");
+      boost::smatch captures;
+      
+      if(boost::regex_match(instr, captures, c, boost::match_extra)){
+	// (1) = "all" | "following", (2) = "instance" | "class", (3) = Object/Classes list
+	if(captures.str(1) == "all") {
+	  if(captures.str(2) == "instance") {
+	    env->listInstances({});
+	  } else if(captures.str(2) == "class") {
+	    env->listClasses({});
+	  }
+	} else {
+	  std::string tokList(captures[3]);
+	  boost::regex tokExpr("\\b(\\w+)\\b *");
+	  boost::sregex_iterator m1(tokList.begin(), tokList.end(), tokExpr);
+	  boost::sregex_iterator m2;
+	  std::list<std::string> tokenList;
+	  std::for_each(m1, m2, [&](const boost::smatch &m) -> bool{
+	      // (1) = Token name
+	      std::string tokenName = m[1];
+	    
+	      tokenList.push_back(tokenName);
+	      
+	      return true;
+	    });
+	
+	  if(captures.str(2) == "instance") {
+	    env->listInstances(tokenList);
+	  } else if(captures.str(2) == "class") {
+	    env->listClasses(tokenList);
+	  }
+	}
+	return true;
+      }
+      return false;
+    });
 }
 
 Interpres::~Interpres() {

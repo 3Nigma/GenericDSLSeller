@@ -17,14 +17,16 @@ public:
   virtual std::string getName();
   std::list<GenericProperty *> &getProperties();
   std::list<GenericClass *> &getParents();
+  std::string getEvalRule();
 
   void setEvalRule(GenericClass *gc);
   void setEvalRule(std::string rule);
-
+  
   void addProperty(GenericProperty *gp);
   void removeProperty(const GenericProperty &gp);
   void modifyPropertyValue(const std::string &propName, double newVal);
   void addDirectParent(GenericClass *gc);
+  virtual std::string inspect();
   virtual double evaluateRule();
   
 protected:

@@ -65,8 +65,28 @@ void GenericClass::setEvalRule(GenericClass *gc) {
   this->mEvalRule = gc->mEvalRule;
 }
 
+std::string GenericClass::getEvalRule() {
+  return this->mEvalRule;
+}
+
 double GenericClass::evaluateRule() {
   throw CannotEvaluateClassException();
+}
+
+std::string GenericClass::inspect() {
+  std::string result = std::string(" >> '") + this->getName() + std::string("' class with the following properties : \n");
+  
+  for(GenericProperty *gp : this->mProperties)
+    result += std::string("+ ") + gp->getName() + std::string(" defaults to : ") + std::to_string(gp->getValue()) + std::string("\n");
+  result += std::string("Evaluates with : '") + this->getEvalRule() + std::string("'");
+  if(this->mParents.size() != 0){
+    result += std::string(" and inherits from :\n | ");
+    for(GenericClass *gc : this->mParents)
+      result += gc->getName() + std::string(" | ");
+  }
+  result += std::string("\n");
+
+  return result;
 }
 
 GenericProperty *GenericClass::findDeepProperty(const std::string &pName) {
