@@ -13,7 +13,12 @@ evaluate myHouseInsurance
 evaluate myDaciaInsurance
 
 - Class modification region
-update class Insurance evaluating in : basecost / 2
+update class Insurance adding the following properties : crisisMargin(1280), baseprofit(5000)
+update class Insurance erasing the following properties : basecost
+update class Insurance evaluating in : baseprofit + crisisMargin * 1.24
 
+- Other operations
+
+- Reevaluate the objects
 evaluate myHouseInsurance
 evaluate myDaciaInsurance

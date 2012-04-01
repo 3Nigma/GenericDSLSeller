@@ -4,16 +4,16 @@ GenericProperty::GenericProperty(const GenericProperty *gpc)
   : mProperty(gpc->mProperty) {
 }
 
-GenericProperty::GenericProperty(std::string name, double value) 
+GenericProperty::GenericProperty(const std::string &name, double value) 
   : mProperty(name, value) {
 }
 
-GenericProperty::GenericProperty(std::string name, std::string value) 
+GenericProperty::GenericProperty(const std::string &name, const std::string &value) 
   : mProperty(name, std::stof(value)) {
 }
 
-bool GenericProperty::operator==(GenericProperty &rhs) {
-  return this->get() == rhs.get();
+bool GenericProperty::operator==(const GenericProperty &rhs) const{
+  return this->getName() == rhs.getName();
 }
 
 std::tuple<std::string, double> GenericProperty::get() {
@@ -28,7 +28,7 @@ void GenericProperty::setValue(double newVal) {
   std::get<1>(mProperty) = newVal;
 } 
 
-std::string GenericProperty::getName() {
+std::string GenericProperty::getName() const {
   return std::get<0>(mProperty);
 }
 

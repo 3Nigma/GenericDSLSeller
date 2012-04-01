@@ -94,11 +94,25 @@ Interpres::Interpres() {
 	if(captures.str(2) == "evaluating") {
 	  gc->setEvalRule(captures.str(3));
 	} else {
-	  if(captures.str(2) == "erasing") {
-	    
-	  } else { // "adding"
-	    
-	  }
+	  std::string propList(captures[3]);
+	  boost::regex propExpr("\\b(\\w+)\\b *(?:\\( *([0-9\\.]+) *\\))?");
+	  boost::sregex_iterator m1(propList.begin(), propList.end(), propExpr);
+	  boost::sregex_iterator m2;
+	  std::for_each(m1, m2, [&](const boost::smatch &m) -> bool{
+	      // (1) = PropertyName, (2) = value
+	      std::string propName = m[1];
+	      std::string propValue = m[2];
+
+	      if(propValue.length() == 0)
+		propValue = "0.0";
+	      if(captures.str(2) == "erasing") {
+		gc->removeProperty({propName, "0.0"});
+	      } else if(captures.str(2) == "adding") {
+		gc->addProperty(new GenericProperty(propName, propValue));
+	      }
+	      
+	      return true;
+	    });
 	}
 	env->updateClass(gc);
 	

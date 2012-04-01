@@ -22,6 +22,7 @@ public:
   void setEvalRule(std::string rule);
 
   void addProperty(GenericProperty *gp);
+  void removeProperty(const GenericProperty &gp);
   void modifyPropertyValue(const std::string &propName, double newVal);
   void addDirectParent(GenericClass *gc);
   virtual double evaluateRule();

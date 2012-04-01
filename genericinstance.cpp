@@ -9,6 +9,10 @@ GenericInstance::GenericInstance(GenericClass *gc, const std::string &name)
     });
 }
 
+GenericInstance::~GenericInstance() {
+  mInstanceParents.clear();
+}
+
 std::string GenericInstance::getName() {
   return mInstanceName;
 }
@@ -20,10 +24,24 @@ std::string GenericInstance::getClassName() {
 void GenericInstance::propagateUpdatedClass(GenericClass *gc) {
   if(gc->getName() == this->getClassName()){
     // class modifications will be reflected in this instance also
-    if(gc->getProperties().size() < this->getProperties().size()) {
+    std::list<GenericProperty *> thisPropList = this->getProperties();
+    std::list<GenericProperty *> gcPropList = gc->getProperties();
+    if(gcPropList.size() < thisPropList.size()) {
       // erasing requested
-    } else if(gc->getProperties().size() > this->getProperties().size()){
+      std::remove_if(this->getProperties().begin(), this->getProperties().end(), [&gcPropList](GenericProperty *gpit){
+	  return std::find_if(gcPropList.begin(), gcPropList.end(), [&gpit](GenericProperty *gpits){
+	      return (*gpit) == (*gpits);
+	    }) == gcPropList.end();
+	});
+    } else if(gcPropList.size() > thisPropList.size()){
       // addition requested
+      for(GenericProperty *gpit : gcPropList){
+	if(std::find_if(this->getProperties().begin(), this->getProperties().end(), [&](GenericProperty *gpits){
+	      return (*gpit) == (*gpits);
+	    }) == this->getProperties().end()){
+	  this->getProperties().push_back(gpit);
+	}
+      }
     } else {
       // evaluation request
       this->setEvalRule(gc);

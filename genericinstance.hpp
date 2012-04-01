@@ -11,6 +11,7 @@
 class GenericInstance : public GenericClass {
 public:
   GenericInstance(GenericClass *gc, const std::string &name);
+  ~GenericInstance();
 
   virtual double evaluateRule();
   void propagateUpdatedClass(GenericClass *gc);

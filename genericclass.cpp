@@ -35,6 +35,12 @@ void GenericClass::addProperty(GenericProperty *gp) {
   mProperties.push_back(gp);
 }
 
+void GenericClass::removeProperty(const GenericProperty &gp) {
+  std::remove_if(mProperties.begin(), mProperties.end(), [&](GenericProperty *gpit){
+      return gp == (*gpit);
+    });
+}
+
 void GenericClass::modifyPropertyValue(const std::string &propName, double newVal) {
   bool propFound = false;
     

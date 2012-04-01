@@ -1,22 +1,22 @@
 #ifndef _GENERICPROPERTY_HPP_
 #define _GENERICPROPERTY_HPP_
 
-#include<string>
-#include<tuple>
+#include <string>
+#include <tuple>
 
 class GenericProperty{
 public:
   GenericProperty(const GenericProperty *gpc);
-  GenericProperty(std::string name, double value);
-  GenericProperty(std::string name, std::string value);
+  GenericProperty(const std::string &name, double value = 0.0);
+  GenericProperty(const std::string &name, const std::string &value = "0.0");
 
-  bool operator==(GenericProperty &rhs);
+  bool operator==(const GenericProperty &rhs) const;
   std::tuple<std::string, double> get();
   void set(std::tuple<std::string, double> &rhs);
 
   double getValue();
   void setValue(double newVal); 
-  std::string getName();
+  std::string getName() const;
 
 protected:
   std::tuple<std::string, double> mProperty;
