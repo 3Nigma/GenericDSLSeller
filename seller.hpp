@@ -19,7 +19,9 @@ public:
   virtual void appendClassParent(const std::string &childName, const std::string &parentName);
   virtual GenericClass *findClass(const std::string &className);
   virtual GenericInstance *makeInstance(const std::string &className, const std::string &instanceName);
- 
+  virtual void evaluateObject(const std::string &instanceName);
+  virtual GenericInstance *findInstanceByName(const std::string &instName);
+
   void run();
 
 protected:

@@ -43,12 +43,29 @@ GenericClass *Seller::findClass(const std::string &className) {
   
   return (*cls);
 }
+
+GenericInstance *Seller::findInstanceByName(const std::string &instName) {
+  std::list<GenericInstance *>::iterator obj = 
+    std::find_if(instanceObjects.begin(), instanceObjects.end(), [&](GenericInstance *goit){
+	return goit->getName() == instName;
+      });
   
+  if(obj == instanceObjects.end())
+    throw InstanceDoesNotExistException();
+  
+  return (*obj);
+}  
+
 GenericInstance *Seller::makeInstance(const std::string &className, const std::string &instanceName) {
   GenericInstance *newInstance = new GenericInstance(findClass(className), instanceName);
   return newInstance;
 }
   
+void Seller::evaluateObject(const std::string &instanceName) {
+  GenericInstance *gi = findInstanceByName(instanceName);
+  std::cout << gi->getClassName() << " (" << gi->getName() << ") has evalated to " << gi->evaluateRule() << std::endl;
+}
+
 void Seller::run() {
   
 }

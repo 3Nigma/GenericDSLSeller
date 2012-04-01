@@ -11,5 +11,6 @@ class CannotEvaluateClassException : std::exception { };
 class BadPropertyValueException : std::exception { };
 class InstanceExistsException : std::exception { };
 class FileDoesNotExistException : std::exception { };
+class InstanceDoesNotExistException : std::exception { };
 
 #endif

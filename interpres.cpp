@@ -66,6 +66,22 @@ Interpres::Interpres() {
 
       return false;
     });
+
+  // add evaluation object parser
+  checkers.push_back([](const std::string &instr, MetaAction *env)->bool {
+      boost::regex c("evaluate +(\\w+)");
+      boost::smatch captures;
+      
+      if(boost::regex_match(instr, captures, c, boost::match_extra)){
+	// (1) = ObjectName
+	
+	env->evaluateObject(captures[1]);
+	
+	return true;
+      }
+
+      return false;
+    });
 }
 
 Interpres::~Interpres() {
