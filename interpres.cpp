@@ -81,7 +81,8 @@ bool Interpres::runFile(const std::string &file, MetaAction *doer) {
 
   while(!instrFile.eof()){
     std::getline(instrFile, line);
-    runInstruction(line, doer);
+    if(line.length() != 0 && line[0] != '-')
+      runInstruction(line, doer);
   }
   instrFile.close();
 
