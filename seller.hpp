@@ -21,6 +21,7 @@ public:
   virtual GenericInstance *makeInstance(const std::string &className, const std::string &instanceName);
   virtual void evaluateObject(const std::string &instanceName);
   virtual GenericInstance *findInstanceByName(const std::string &instName);
+  virtual void updateClass(GenericClass *gc);
 
   void run();
 

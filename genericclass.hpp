@@ -15,15 +15,17 @@ public:
   virtual ~GenericClass();
 
   virtual std::string getName();
-  std::list<GenericProperty *> getProperties();
-  std::list<GenericClass *> getParents();
+  std::list<GenericProperty *> &getProperties();
+  std::list<GenericClass *> &getParents();
+
+  void setEvalRule(GenericClass *gc);
+  void setEvalRule(std::string rule);
 
   void addProperty(GenericProperty *gp);
   void modifyPropertyValue(const std::string &propName, double newVal);
   void addDirectParent(GenericClass *gc);
-  void setEvalRule(std::string rule);
   virtual double evaluateRule();
-
+  
 protected:
   std::list<GenericProperty *> mProperties;
   std::string mName;
@@ -31,7 +33,6 @@ protected:
   std::list<GenericClass *> mParents;
 
   GenericProperty *findDeepProperty(const std::string &pName);
-  std::string expandRule();
 };
 
 #endif

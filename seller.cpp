@@ -66,6 +66,12 @@ void Seller::evaluateObject(const std::string &instanceName) {
   std::cout << gi->getClassName() << " (" << gi->getName() << ") has evalated to " << gi->evaluateRule() << std::endl;
 }
 
+void Seller::updateClass(GenericClass *gc) {
+  for(GenericInstance *gi : instanceObjects) {
+    gi->propagateUpdatedClass(gc);
+  }
+}
+
 void Seller::run() {
   
 }

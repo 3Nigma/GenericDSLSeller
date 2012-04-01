@@ -76,6 +76,31 @@ Interpres::Interpres() {
 	// (1) = ObjectName
 	
 	env->evaluateObject(captures[1]);
+        return true;
+      }
+      
+      return false;
+    });
+
+  // add parsing code to modify the structure of an existing class
+  checkers.push_back([](const std::string &instr, MetaAction *env)->bool {
+      boost::regex c("update +class +\\b(\\w+)\\b +(erasing|adding|evaluating).*\\b(?:properties|property|in)\\b *: *(.+)");
+      boost::smatch captures;
+      
+      if(boost::regex_match(instr, captures, c, boost::match_extra)){
+	// (1) = ClassName, (2) = update type : "erasing" | "adding" | "evaluating", (3) = Property list | Evaluation rule
+	
+	GenericClass *gc = env->findClass(captures[1]);
+	if(captures.str(2) == "evaluating") {
+	  gc->setEvalRule(captures.str(3));
+	} else {
+	  if(captures.str(2) == "erasing") {
+	    
+	  } else { // "adding"
+	    
+	  }
+	}
+	env->updateClass(gc);
 	
 	return true;
       }

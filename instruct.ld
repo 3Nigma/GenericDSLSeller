@@ -11,3 +11,9 @@ instantiate CarInsurance in myDaciaInsurance setting nrOfDoors(4), horsePower(14
 - Object evaluation zone
 evaluate myHouseInsurance
 evaluate myDaciaInsurance
+
+- Class modification region
+update class Insurance evaluating in : basecost / 2
+
+evaluate myHouseInsurance
+evaluate myDaciaInsurance

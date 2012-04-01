@@ -10,13 +10,18 @@
 
 class GenericInstance : public GenericClass {
 public:
-  GenericInstance(const GenericClass *gc, const std::string &name);
+  GenericInstance(GenericClass *gc, const std::string &name);
 
   virtual double evaluateRule();
+  void propagateUpdatedClass(GenericClass *gc);
+  
   virtual std::string getName();
   std::string getClassName();
 protected:
   std::string mInstanceName;
+  std::list<GenericInstance *> mInstanceParents;
+
+  std::string expandRule();
 };
 
 #endif
