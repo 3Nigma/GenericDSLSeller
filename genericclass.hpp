@@ -14,7 +14,7 @@ public:
   GenericClass(const GenericClass *gcCopy);
   virtual ~GenericClass();
 
-  std::string getName();
+  virtual std::string getName();
   std::list<GenericProperty *> getProperties();
   std::list<GenericClass *> getParents();
 

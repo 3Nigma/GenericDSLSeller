@@ -2,6 +2,7 @@
 #define _INTERPRES_HPP_
 
 #include <iostream>
+#include <fstream>
 #include <functional>
 #include <list>
 #include <boost/regex.hpp>

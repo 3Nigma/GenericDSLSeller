@@ -15,10 +15,11 @@ public:
   ~Seller();
   
   virtual void addClass(GenericClass *gc);
+  virtual void addInstance(GenericInstance *gi);
   virtual void appendClassParent(const std::string &childName, const std::string &parentName);
   virtual GenericClass *findClass(const std::string &className);
-  virtual GenericInstance *makeInstance(const std::string &className);
-  
+  virtual GenericInstance *makeInstance(const std::string &className, const std::string &instanceName);
+ 
   void run();
 
 protected:

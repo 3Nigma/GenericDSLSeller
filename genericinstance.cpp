@@ -1,7 +1,15 @@
 #include "genericinstance.hpp"
 
-GenericInstance::GenericInstance(const GenericClass *gc)
-  : GenericClass(gc) {
+GenericInstance::GenericInstance(const GenericClass *gc, const std::string &name)
+  : GenericClass(gc), mInstanceName(name) {
+}
+
+std::string GenericInstance::getName() {
+  return mInstanceName;
+}
+
+std::string GenericInstance::getClassName() {
+  return GenericClass::getName();
 }
 
 double GenericInstance::evaluateRule() {

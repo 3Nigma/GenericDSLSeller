@@ -10,9 +10,13 @@
 
 class GenericInstance : public GenericClass {
 public:
-  GenericInstance(const GenericClass *gc);
+  GenericInstance(const GenericClass *gc, const std::string &name);
 
   virtual double evaluateRule();
+  virtual std::string getName();
+  std::string getClassName();
+protected:
+  std::string mInstanceName;
 };
 
 #endif

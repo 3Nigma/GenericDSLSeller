@@ -8,9 +8,10 @@
 class MetaAction{
 public:
   virtual void addClass(GenericClass *gc) = 0;
+  virtual void addInstance(GenericInstance *gi) = 0;
   virtual void appendClassParent(const std::string &childName, const std::string &parentName) = 0;
   virtual GenericClass *findClass(const std::string &className) = 0;
-  virtual GenericInstance *makeInstance(const std::string &className) = 0;
+  virtual GenericInstance *makeInstance(const std::string &className, const std::string &instanceName) = 0;
 };
 
 #endif

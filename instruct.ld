@@ -1,0 +1,1 @@
+create class ClassName2 with the following properties: prop1(1.2) and evaluates with 'prop1*3'
