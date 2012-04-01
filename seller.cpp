@@ -97,5 +97,21 @@ void Seller::listInstances(std::list<std::string> instNames) {
 }
 
 void Seller::run() {
+  std::string command;
   
+  std::cout << "Welcome to my Store!" << std::endl;
+  std::cout << "I'm a generic seller, please tell me what I can do for you ..." << std::endl;
+  std::cout << "(If you don't know how to say something, you can always shout for 'help')" << std::endl << std::endl;
+  
+  do{
+    std::cout << " > ";
+    std::getline(std::cin, command);
+    if(command == "help"){
+      std::cout << "Comming soon ..." << std::endl;
+    } else if(!transi.runInstruction(command, this)){
+      std::cout << "I didn't quite get that, can you try again please ? ..." << std::endl;
+    }
+  }while(command != "exit");
+  
+  std::cout << "Goodbye! Come again ..." << std::endl;
 }

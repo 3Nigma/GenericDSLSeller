@@ -205,7 +205,9 @@ bool Interpres::runFile(const std::string &file, MetaAction *doer) {
   while(!instrFile.eof()){
     std::getline(instrFile, line);
     if(line.length() != 0 && line[0] != '-')
-      runInstruction(line, doer);
+      if(!runInstruction(line, doer)){
+	std::cout << "Unable to parse line '" << line << "'" << std::endl;
+      }
   }
   instrFile.close();
 
@@ -213,9 +215,12 @@ bool Interpres::runFile(const std::string &file, MetaAction *doer) {
 }
 
 bool Interpres::runInstruction(const std::string &instr, MetaAction *doer) {
+  bool instrProcessed = false;
   for(std::function<bool(const std::string &, MetaAction *)> parser : checkers)
-    if(parser(instr, doer))
+    if(parser(instr, doer)){
+      instrProcessed = true;
       break;
+    }
   
-  return true;
+  return instrProcessed;
 }
