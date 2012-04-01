@@ -121,6 +121,35 @@ Interpres::Interpres() {
 
       return false;
     });
+
+  // parse modification of instance properties
+  checkers.push_back([](const std::string &instr, MetaAction *env)->bool {
+      boost::regex c("update +instance +(\\w+).*\\b(?:value.?) *: *(.+)");
+      boost::smatch captures;
+      
+      if(boost::regex_match(instr, captures, c, boost::match_extra)){
+	// (1) = ObjectName, (2) = Property list
+	std::string propList(captures[2]);
+	boost::regex propExpr("\\b(\\w+)\\b *(?:\\( *([0-9\\.]+) *\\))?");
+	boost::sregex_iterator m1(propList.begin(), propList.end(), propExpr);
+	boost::sregex_iterator m2;
+	GenericInstance *obj = env->findInstanceByName(captures.str(1));
+	std::for_each(m1, m2, [&](const boost::smatch &m) -> bool{
+	    // (1) = PropertyName, (2) = value
+	    std::string propName = m[1];
+	    std::string propValue = m[2];
+	    
+	    GenericProperty *objProp = obj->findProperty(propName);
+	    objProp->setValue(propValue);
+	    
+	    return true;
+	  });
+	
+        return true;
+      }
+      
+      return false;
+    });
 }
 
 Interpres::~Interpres() {

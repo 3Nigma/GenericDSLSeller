@@ -16,6 +16,8 @@ public:
 
   double getValue();
   void setValue(double newVal); 
+  void setValue(const std::string &newVal);
+
   std::string getName() const;
 
 protected:

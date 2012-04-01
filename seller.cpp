@@ -63,7 +63,7 @@ GenericInstance *Seller::makeInstance(const std::string &className, const std::s
   
 void Seller::evaluateObject(const std::string &instanceName) {
   GenericInstance *gi = findInstanceByName(instanceName);
-  std::cout << gi->getClassName() << " (" << gi->getName() << ") has evalated to " << gi->evaluateRule() << std::endl;
+  std::cout << gi->getClassName() << " (" << gi->getName() << ") has evaluated to " << gi->evaluateRule() << std::endl;
 }
 
 void Seller::updateClass(GenericClass *gc) {

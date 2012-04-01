@@ -28,6 +28,10 @@ void GenericProperty::setValue(double newVal) {
   std::get<1>(mProperty) = newVal;
 } 
 
+void GenericProperty::setValue(const std::string &newVal) {
+  std::get<1>(mProperty) = stod(newVal);
+} 
+
 std::string GenericProperty::getName() const {
   return std::get<0>(mProperty);
 }

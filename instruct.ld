@@ -18,6 +18,7 @@ update class Insurance erasing the following properties : basecost
 update class Insurance evaluating in : baseprofit + crisisMargin * 1.24
 
 - Other operations
+update instance myHouseInsurance setting property values : crisisMargin(1000)
 
 - Reevaluate the objects
 evaluate myHouseInsurance

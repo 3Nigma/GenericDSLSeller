@@ -18,11 +18,14 @@ public:
   
   virtual std::string getName();
   std::string getClassName();
+  GenericProperty *findProperty(const std::string &name);
+
 protected:
   std::string mInstanceName;
   std::list<GenericInstance *> mInstanceParents;
 
   std::string expandRule();
+  virtual GenericProperty *findDeepProperty(const std::string &pName);
 };
 
 #endif

@@ -33,7 +33,7 @@ protected:
   std::string mEvalRule;
   std::list<GenericClass *> mParents;
 
-  GenericProperty *findDeepProperty(const std::string &pName);
+  virtual GenericProperty *findDeepProperty(const std::string &pName);
 };
 
 #endif

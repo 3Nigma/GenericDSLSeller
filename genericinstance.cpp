@@ -21,6 +21,10 @@ std::string GenericInstance::getClassName() {
   return GenericClass::getName();
 }
 
+GenericProperty *GenericInstance::findProperty(const std::string &propName) {
+  return findDeepProperty(propName);
+}
+
 void GenericInstance::propagateUpdatedClass(GenericClass *gc) {
   if(gc->getName() == this->getClassName()){
     // class modifications will be reflected in this instance also
@@ -39,7 +43,7 @@ void GenericInstance::propagateUpdatedClass(GenericClass *gc) {
 	if(std::find_if(this->getProperties().begin(), this->getProperties().end(), [&](GenericProperty *gpits){
 	      return (*gpit) == (*gpits);
 	    }) == this->getProperties().end()){
-	  this->getProperties().push_back(gpit);
+	  this->getProperties().push_back(new GenericProperty(gpit));
 	}
       }
     } else {
@@ -103,4 +107,24 @@ std::string GenericInstance::expandRule() {
     });
   
   return composedRule;
+}
+
+GenericProperty *GenericInstance::findDeepProperty(const std::string &pName) {
+  // search in current property list
+  std::list<GenericProperty *>::iterator pFoundPropIt = 
+    std::find_if(mProperties.begin(), mProperties.end(), [&](GenericProperty *gpit){
+	return gpit->getName() == pName;
+      });
+  
+  GenericProperty *pFoundProp = (*pFoundPropIt);
+  if(pFoundPropIt == mProperties.end()){
+    // if not found, search in parents property list
+    for (GenericInstance *it : mInstanceParents){
+      pFoundProp = it->findDeepProperty(pName);
+      if(nullptr != pFoundProp)
+	break;
+    }
+  }
+  
+  return pFoundProp;
 }
