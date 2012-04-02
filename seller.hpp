@@ -25,6 +25,7 @@ public:
   virtual void listClasses(std::list<std::string> clsNames);
   virtual void listInstances(std::list<std::string> instNames);
 
+  void printHelpMenu();
   void run();
 
 protected:

@@ -204,13 +204,17 @@ bool Interpres::runFile(const std::string &file, MetaAction *doer) {
 
   while(!instrFile.eof()){
     std::getline(instrFile, line);
-    if(line.length() != 0 && line[0] != '-')
-      if(!runInstruction(line, doer)){
-	std::cout << "Unable to parse line '" << line << "'" << std::endl;
-      }
+    if(line.length() != 0) {
+      std::cout << line << std::endl;
+      if(line[0] != '-') {
+	if(!runInstruction(line, doer)){
+	  std::cout << "Unable to parse line '" << line << "'" << std::endl;
+	}
+      } 
+    }
   }
   instrFile.close();
-
+  
   return true;
 }
 

@@ -2,6 +2,7 @@
 
 Seller::Seller(const std::string &ldFile) {
   // apply a instruction file to the app instance
+  std::cout << " Genetic system preloading ..." << std::endl;
   transi.runFile(ldFile, this);
 }
 
@@ -96,6 +97,25 @@ void Seller::listInstances(std::list<std::string> instNames) {
   std::cout << "***** This is the end of instance inspection *****" << std::endl;
 }
 
+void Seller::printHelpMenu() {
+  std::cout << "Alright, here's what I understand :" << std::endl
+	    << " * Creating new stuff : " << std::endl
+	    << "create class <newClassName> [inherits <className> ]with the following properties: <prop1>[(<defValue1>)][, ...[, <propN>[(<defValueN>)]]] and evaluates with '<evaluationRule>'" << std::endl
+	    << " * Ordering existing items : " << std::endl
+	    << "instantiate <existingClassName> in <instanceName> setting <prop1>(<defValue1>][, ...[, <propN>(<defValueN>)]]" << std::endl
+	    << " * Custom tweak an item type : " << std::endl
+	    << "update class <existingClassName> <'erasing'|'adding'> the following properties : <prop1>[(<defValue1>)][, ...[, <propN>[(<defValueN>)]]]" << std::endl
+	    << "update class <existingClassName> evaluating in : <newEvaluationRule>" << std::endl
+	    << " * Ask for the price of an ordered item : " << std::endl
+	    << "evaluate <instanceName>" << std::endl
+	    << " * Fine-tweak a property of an ordered item : " << std::endl
+	    << "update instance <instanceName> setting property values : <prop1>[(<defValue1>)][, ...[, <propN>[(<defValueN>)]]]" << std::endl
+	    << " * List ordered/available items : " << std::endl
+	    << "list all <'instances'|'classes'>" << std::endl
+	    << "list following <'instances'|'classes'> : <token1>[, ...[, <tokenN>]]" << std::endl
+	    << "And that's about it ... hope that helps! :-)" << std::endl;
+}
+
 void Seller::run() {
   std::string command;
   
@@ -103,14 +123,16 @@ void Seller::run() {
   std::cout << "I'm a generic seller, please tell me what I can do for you ..." << std::endl;
   std::cout << "(If you don't know how to say something, you can always shout for 'help')" << std::endl << std::endl;
   
+  command = "help";
   do{
-    std::cout << " > ";
-    std::getline(std::cin, command);
     if(command == "help"){
-      std::cout << "Comming soon ..." << std::endl;
+      printHelpMenu();
     } else if(!transi.runInstruction(command, this)){
       std::cout << "I didn't quite get that, can you try again please ? ..." << std::endl;
     }
+    
+    std::cout << " > ";
+    std::getline(std::cin, command);
   }while(command != "exit");
   
   std::cout << "Goodbye! Come again ..." << std::endl;
