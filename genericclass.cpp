@@ -1,4 +1,5 @@
 #include "genericclass.hpp"
+#include <iostream>
 
 GenericClass::GenericClass(const std::string &name) 
   : mName(name) {
@@ -35,10 +36,16 @@ void GenericClass::addProperty(GenericProperty *gp) {
   mProperties.push_back(gp);
 }
 
-void GenericClass::removeProperty(const GenericProperty &gp) {
-  std::remove_if(mProperties.begin(), mProperties.end(), [&](GenericProperty *gpit){
-      return gp == (*gpit);
-    });
+void GenericClass::removeProperty(const std::string &propName) {
+  GenericProperty *targetedProp = findDeepProperty(propName);
+
+  if(nullptr != targetedProp) {
+    auto newLstEnd = std::remove_if(mProperties.begin(), mProperties.end(), [&](GenericProperty *gpit){
+	return (*targetedProp) == (*gpit);
+      });
+    
+    mProperties.erase(newLstEnd, mProperties.end());
+  }
 }
 
 void GenericClass::modifyPropertyValue(const std::string &propName, double newVal) {

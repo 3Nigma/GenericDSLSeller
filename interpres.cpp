@@ -106,7 +106,7 @@ Interpres::Interpres() {
 	      if(propValue.length() == 0)
 		propValue = "0.0";
 	      if(captures.str(2) == "erasing") {
-		gc->removeProperty({propName, "0.0"});
+		gc->removeProperty(propName);
 	      } else if(captures.str(2) == "adding") {
 		gc->addProperty(new GenericProperty(propName, propValue));
 	      }

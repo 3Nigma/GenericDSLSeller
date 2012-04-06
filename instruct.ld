@@ -9,8 +9,8 @@ instantiate HouseInsurance in myHouseInsurance setting nrOfRooms(3), areaCode(1)
 instantiate CarInsurance in myDaciaInsurance setting nrOfDoors(4), horsePower(140)
 
 - Object evaluation zone
-evaluate myHouseInsurance
-evaluate myDaciaInsurance
+- evaluate myHouseInsurance
+- evaluate myDaciaInsurance
 
 - Class modification region
 update class Insurance adding the following properties : crisisMargin(1280), baseprofit(5000)
@@ -21,5 +21,5 @@ update class Insurance evaluating in : baseprofit + crisisMargin * 1.24
 update instance myHouseInsurance setting property values : crisisMargin(1000)
 
 - Reevaluate the objects
-evaluate myHouseInsurance
-evaluate myDaciaInsurance
+- evaluate myHouseInsurance
+- evaluate myDaciaInsurance
