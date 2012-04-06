@@ -74,7 +74,7 @@ void Seller::updateClass(GenericClass *gc) {
 }
 
 void Seller::listClasses(std::list<std::string> clsNames) {
-  std::cout << "***** The following classes are defined in the system : *****" << std::endl;
+  std::cout << "\033[1;30;47m***** The following classes are defined in the system : *****\033[m" << std::endl;
   for(GenericClass *gc: instanceClasses){
     if(clsNames.size() == 0 ||
        std::find_if(clsNames.begin(), clsNames.end(), [&](std::string &cName){
@@ -82,11 +82,11 @@ void Seller::listClasses(std::list<std::string> clsNames) {
 	 }) != clsNames.end())
       std::cout << gc->inspect() << std::endl;
   }
-  std::cout << "***** This is the end of class inspection *****" << std::endl;
+  std::cout << "\033[1;30;47m***** This is the end of class inspection *****\033[m" << std::endl;
 }
 
 void Seller::listInstances(std::list<std::string> instNames) {
-  std::cout << "***** The following instances are defined in the system : *****" << std::endl;
+  std::cout << "\033[1;30;47m***** The following instances are defined in the system : *****\033[m" << std::endl;
   for(GenericInstance *go: instanceObjects){
     if(instNames.size() == 0 ||
        std::find_if(instNames.begin(), instNames.end(), [&](std::string &oName){
@@ -94,34 +94,34 @@ void Seller::listInstances(std::list<std::string> instNames) {
 	 }) != instNames.end())
       std::cout << go->inspect() << std::endl;
   }
-  std::cout << "***** This is the end of instance inspection *****" << std::endl;
+  std::cout << "\033[1;30;47m***** This is the end of instance inspection *****\033[m" << std::endl;
 }
 
 void Seller::printHelpMenu() {
-  std::cout << "Alright, here's what I understand :" << std::endl
-	    << " * Creating new stuff : " << std::endl
+  std::cout << "\033[1;36mAlright, here's what I understand :\033[0m" << std::endl
+	    << "\033[0;33m * Creating new stuff : \033[0m" << std::endl
 	    << "create class <newClassName> [inherits <className> ]with the following properties: <prop1>[(<defValue1>)][, ...[, <propN>[(<defValueN>)]]] and evaluates with '<evaluationRule>'" << std::endl
-	    << " * Ordering existing items : " << std::endl
+	    << "\033[0;33m * Ordering existing items : \033[0m" << std::endl
 	    << "instantiate <existingClassName> in <instanceName> setting <prop1>(<defValue1>][, ...[, <propN>(<defValueN>)]]" << std::endl
-	    << " * Custom tweak an item type : " << std::endl
+	    << "\033[0;33m * Custom tweak an item type : \033[0m" << std::endl
 	    << "update class <existingClassName> <'erasing'|'adding'> the following properties : <prop1>[(<defValue1>)][, ...[, <propN>[(<defValueN>)]]]" << std::endl
 	    << "update class <existingClassName> evaluating in : <newEvaluationRule>" << std::endl
-	    << " * Ask for the price of an ordered item : " << std::endl
+	    << "\033[0;33m * Ask for the price of an ordered item : \033[0m" << std::endl
 	    << "evaluate <instanceName>" << std::endl
-	    << " * Fine-tweak a property of an ordered item : " << std::endl
+	    << "\033[0;33m * Fine-tweak a property of an ordered item : \033[0m" << std::endl
 	    << "update instance <instanceName> setting property values : <prop1>[(<defValue1>)][, ...[, <propN>[(<defValueN>)]]]" << std::endl
-	    << " * List ordered/available items : " << std::endl
+	    << "\033[0;33m * List ordered/available items : \033[0m" << std::endl
 	    << "list all <'instances'|'classes'>" << std::endl
 	    << "list following <'instances'|'classes'> : <token1>[, ...[, <tokenN>]]" << std::endl
-	    << "And that's about it ... hope that helps! :-)" << std::endl;
+	    << "And that's about it ... hope that \033[4mhelp\033[ms! :-)" << std::endl;
 }
 
 void Seller::run() {
   std::string command;
   
-  std::cout << "Welcome to my Store!" << std::endl;
-  std::cout << "I'm a generic seller, please tell me what I can do for you ..." << std::endl;
-  std::cout << "(If you don't know how to say something, you can always shout for 'help')" << std::endl << std::endl;
+  std::cout << std::endl << "\033[1;30;43mThe Store is Opened!\033[0m" << std::endl;
+  std::cout << "\033[1;32mI'm a generic seller, please tell me what I can do for you ...\033[0m" << std::endl;
+  std::cout << "\033[1;32mIf you don't know how to say something, you can always shout for 'help' for which I'll always reply :\033[0m" << std::endl;
   
   command = "help";
   do{
