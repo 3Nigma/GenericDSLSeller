@@ -32,11 +32,12 @@ void GenericInstance::propagateUpdatedClass(GenericClass *gc) {
     std::list<GenericProperty *> gcPropList = gc->getProperties();
     if(gcPropList.size() < thisPropList.size()) {
       // erasing requested
-      std::remove_if(this->getProperties().begin(), this->getProperties().end(), [&gcPropList](GenericProperty *gpit){
+      auto newListEnd = std::remove_if(this->getProperties().begin(), this->getProperties().end(), [&gcPropList](GenericProperty *gpit){
 	  return std::find_if(gcPropList.begin(), gcPropList.end(), [&gpit](GenericProperty *gpits){
 	      return (*gpit) == (*gpits);
 	    }) == gcPropList.end();
 	});
+      this->getProperties().erase(newListEnd, this->getProperties().end());
     } else if(gcPropList.size() > thisPropList.size()){
       // addition requested
       for(GenericProperty *gpit : gcPropList){
