@@ -30,6 +30,7 @@ public:
 
 protected:
   Interpres *transi;
+  std::string mCommandFile;
   std::list<GenericClass *> instanceClasses;
   std::list<GenericInstance *> instanceObjects;
 };

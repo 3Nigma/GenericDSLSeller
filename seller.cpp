@@ -1,6 +1,7 @@
 #include "seller.hpp"
 
-Seller::Seller(const std::string &ldFile) {
+Seller::Seller(const std::string &ldFile)
+  : mCommandFile(ldFile) {
   transi = new Interpres(this);
   
   // apply a instruction file to the app instance
@@ -9,6 +10,8 @@ Seller::Seller(const std::string &ldFile) {
 }
 
 Seller::~Seller() {
+  transi->dumpInstructions(mCommandFile, {Interpres::InstrType::List, Interpres::InstrType::EvaluateInstance});
+
   delete transi;
   this->instanceClasses.clear();
   this->instanceObjects.clear();

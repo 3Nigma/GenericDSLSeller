@@ -26,14 +26,14 @@ public:
 
   void setReceiver(MetaAction *recv);
   void insertChecker(const std::tuple<std::function<bool(const std::string &, MetaAction *)>, InstrType> &checker);
-  void dumpInstructions(const std::string &file);
-
+  void dumpInstructions(const std::string &file, std::list<InstrType> filteredInstrTypes);
+ 
   bool runFile(const std::string &file);
   Interpres::InstrType executeInstruction(const std::string &instr);
 
 private:
   std::list<std::tuple<std::function<bool(const std::string &, MetaAction *)>, InstrType>> mCheckers;
-  std::list<std::string> mInstrQueue;
+  std::list<std::tuple<std::string, InstrType>> mInstrQueue;
   MetaAction *mReceiver;
 };
 

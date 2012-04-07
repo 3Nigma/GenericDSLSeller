@@ -195,6 +195,7 @@ Interpres::Interpres(MetaAction *recv)
 
 Interpres::~Interpres() {
   mCheckers.clear();
+  mInstrQueue.clear();
 }
 
 void Interpres::setReceiver(MetaAction *recv) {
@@ -205,8 +206,22 @@ void Interpres::insertChecker(const std::tuple<std::function<bool(const std::str
   mCheckers.push_back(checker);
 }
 
-void Interpres::dumpInstructions(const std::string &file) {
-  // TODO: Add code to dump the relevant instruction commands to file
+void Interpres::dumpInstructions(const std::string &file, std::list<InstrType> filteredInstrTypes) {
+  std::ofstream dumpFile(file);
+
+  if(!dumpFile.good())
+    throw FileDoesNotExistException();
+
+  dumpFile << "- File automatically generated. Be careful what you're touching here ..." << std::endl;
+  for(std::tuple<std::string, InstrType> currentInstr : mInstrQueue) {
+    if(std::find_if(filteredInstrTypes.begin(), filteredInstrTypes.end(), [&](InstrType &instrT) {
+	  return instrT == std::get<1>(currentInstr);
+	}) == filteredInstrTypes.end()) {
+      dumpFile << std::get<0>(currentInstr) << std::endl;
+    }
+  }
+
+  dumpFile.close();
 }
 
 bool Interpres::runFile(const std::string &file) {
@@ -246,6 +261,8 @@ Interpres::InstrType Interpres::executeInstruction(const std::string &instr) {
       break;
     }
   }
-  
+  if(InstrType::Unrecognized != procInstrType)
+    mInstrQueue.push_back(std::tuple<std::string, InstrType>{instr, procInstrType});
+
   return procInstrType;
 }
