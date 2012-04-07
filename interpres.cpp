@@ -1,43 +1,45 @@
 #include "interpres.hpp"
 
-Interpres::Interpres() {
+Interpres::Interpres(MetaAction *recv) 
+  : mReceiver(recv) {
+  
   // add create syntax parser
-  checkers.push_back([](const std::string &instr, MetaAction *env)->bool {
-      boost::regex c("create +class +(\\w+) +(?:.*\\b(?:inherits)\\b +(\\w+) +)?.*\\b(?:properties:) *(.*)\\b(?:and)\\b.*(?:with *)'(.*)'");
-      boost::smatch captures;
-
-      if(boost::regex_match(instr, captures, c, boost::match_extra)){
-	// (1) = ClassName, (2 - OPT) = ParentClass, (3) = Property list, (4) = Evaluation rule
-	GenericClass *newClass = new GenericClass(captures[1]);
+  insertChecker(std::tuple<std::function<bool(const std::string &, MetaAction *)>, InstrType>{[](const std::string &instr, MetaAction *env)->bool {
+	boost::regex c("create +class +(\\w+) +(?:.*\\b(?:inherits)\\b +(\\w+) +)?.*\\b(?:properties:) *(.*)\\b(?:and)\\b.*(?:with *)'(.*)'");
+	boost::smatch captures;
 	
-	std::string propList(captures[3]);
-	boost::regex propExpr("\\b(\\w+)\\b *(?:\\( *([0-9\\.]+) *\\))?");
-	boost::sregex_iterator m1(propList.begin(), propList.end(), propExpr);
-	boost::sregex_iterator m2;
-	std::for_each(m1, m2, [&newClass](const boost::smatch &m) -> bool{
-	    // (1) = PropertyName, (2 - OPT) = Initial value
-	    std::string propName = m[1];
-	    std::string propValue = m[2];
-	    if(propValue.length() == 0)
-	      propValue = "0.0";
-	    newClass->addProperty(new GenericProperty(propName, propValue));
-	    return true;
-	  });
+	if(boost::regex_match(instr, captures, c, boost::match_extra)){
+	  // (1) = ClassName, (2 - OPT) = ParentClass, (3) = Property list, (4) = Evaluation rule
+	  GenericClass *newClass = new GenericClass(captures[1]);
 	
-	newClass->setEvalRule(captures[4]);
-
-	env->addClass(newClass);
-	if(captures.length(2) != 0)
-	  env->appendClassParent(captures.str(1), captures.str(2));
+	  std::string propList(captures[3]);
+	  boost::regex propExpr("\\b(\\w+)\\b *(?:\\( *([0-9\\.]+) *\\))?");
+	  boost::sregex_iterator m1(propList.begin(), propList.end(), propExpr);
+	  boost::sregex_iterator m2;
+	  std::for_each(m1, m2, [&newClass](const boost::smatch &m) -> bool{
+	      // (1) = PropertyName, (2 - OPT) = Initial value
+	      std::string propName = m[1];
+	      std::string propValue = m[2];
+	      if(propValue.length() == 0)
+		propValue = "0.0";
+	      newClass->addProperty(new GenericProperty(propName, propValue));
+	      return true;
+	    });
+	  
+	  newClass->setEvalRule(captures[4]);
+	  
+	  env->addClass(newClass);
+	  if(captures.length(2) != 0)
+	    env->appendClassParent(captures.str(1), captures.str(2));
+	  
+	  return true;
+	}
 	
-	return true;
-      }
-
-      return false;
-    });
+	return false;
+      }, InstrType::AddClass});
 
   // add instantion command parser
-  checkers.push_back([](const std::string &instr, MetaAction *env)->bool {
+  insertChecker(std::tuple<std::function<bool(const std::string &, MetaAction *)>, InstrType>{[](const std::string &instr, MetaAction *env)->bool {
       boost::regex c("instantiate +(\\w+) +in +(\\w+) +setting +(.*)");
       boost::smatch captures;
       
@@ -65,10 +67,10 @@ Interpres::Interpres() {
       }
 
       return false;
-    });
+      }, InstrType::AddInstance});
 
   // add evaluation object parser
-  checkers.push_back([](const std::string &instr, MetaAction *env)->bool {
+  insertChecker(std::tuple<std::function<bool(const std::string &, MetaAction *)>, InstrType>{[](const std::string &instr, MetaAction *env)->bool {
       boost::regex c("evaluate +(\\w+)");
       boost::smatch captures;
       
@@ -80,10 +82,10 @@ Interpres::Interpres() {
       }
       
       return false;
-    });
+      }, InstrType::EvaluateInstance});
 
   // add parsing code to modify the structure of an existing class
-  checkers.push_back([](const std::string &instr, MetaAction *env)->bool {
+  insertChecker(std::tuple<std::function<bool(const std::string &, MetaAction *)>, InstrType>{[](const std::string &instr, MetaAction *env)->bool {
       boost::regex c("update +class +\\b(\\w+)\\b +(erasing|adding|evaluating).*\\b(?:properties|property|in)\\b *: *(.+)");
       boost::smatch captures;
       
@@ -120,10 +122,10 @@ Interpres::Interpres() {
       }
 
       return false;
-    });
+      }, InstrType::ModifyClass});
 
   // parse modification of instance properties
-  checkers.push_back([](const std::string &instr, MetaAction *env)->bool {
+  insertChecker(std::tuple<std::function<bool(const std::string &, MetaAction *)>, InstrType>{[](const std::string &instr, MetaAction *env)->bool {
       boost::regex c("update +instance +(\\w+).*\\b(?:value.?) *: *(.+)");
       boost::smatch captures;
       
@@ -149,10 +151,10 @@ Interpres::Interpres() {
       }
       
       return false;
-    });
+      }, InstrType::ModifyInstance});
 
   // parse listing of classes/objects
-  checkers.push_back([](const std::string &instr, MetaAction *env)->bool {
+  insertChecker(std::tuple<std::function<bool(const std::string &, MetaAction *)>, InstrType>{[](const std::string &instr, MetaAction *env)->bool {
       boost::regex c("list +(all|following) +(instance|class)e?s? *(?:\\: *(.+))?");
       boost::smatch captures;
       
@@ -188,14 +190,26 @@ Interpres::Interpres() {
 	return true;
       }
       return false;
-    });
+      }, InstrType::List});
 }
 
 Interpres::~Interpres() {
-  checkers.clear();
+  mCheckers.clear();
 }
 
-bool Interpres::runFile(const std::string &file, MetaAction *doer) {
+void Interpres::setReceiver(MetaAction *recv) {
+  this->mReceiver = recv;
+}
+
+void Interpres::insertChecker(const std::tuple<std::function<bool(const std::string &, MetaAction *)>, InstrType> &checker) {
+  mCheckers.push_back(checker);
+}
+
+void Interpres::dumpInstructions(const std::string &file) {
+  // TODO: Add code to dump the relevant instruction commands to file
+}
+
+bool Interpres::runFile(const std::string &file) {
   std::ifstream instrFile(file);
   std::string line;
 
@@ -210,7 +224,7 @@ bool Interpres::runFile(const std::string &file, MetaAction *doer) {
       else
 	std::cout << line << std::endl;
       if(line[0] != '-') {
-	if(!runInstruction(line, doer)){
+	if(executeInstruction(line) == InstrType::Unrecognized){
 	  std::cout << "Unable to parse line '" << line << "'" << std::endl;
 	}
       } 
@@ -221,13 +235,17 @@ bool Interpres::runFile(const std::string &file, MetaAction *doer) {
   return true;
 }
 
-bool Interpres::runInstruction(const std::string &instr, MetaAction *doer) {
-  bool instrProcessed = false;
-  for(std::function<bool(const std::string &, MetaAction *)> parser : checkers)
-    if(parser(instr, doer)){
-      instrProcessed = true;
+Interpres::InstrType Interpres::executeInstruction(const std::string &instr) {
+  Interpres::InstrType procInstrType = Interpres::InstrType::Unrecognized;
+  std::function<bool(const std::string &, MetaAction *)> parser;
+
+  for(std::tuple<std::function<bool(const std::string &, MetaAction *)>, InstrType> checker : mCheckers) {
+    parser = std::get<0>(checker);
+    if(parser(instr, mReceiver)){
+      procInstrType = std::get<1>(checker);
       break;
     }
+  }
   
-  return instrProcessed;
+  return procInstrType;
 }

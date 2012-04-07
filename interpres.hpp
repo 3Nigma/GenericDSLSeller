@@ -5,19 +5,36 @@
 #include <fstream>
 #include <functional>
 #include <list>
+#include <tuple>
 #include <boost/regex.hpp>
 
 #include "metaaction.hpp"
 
 class Interpres{
 public:
-  Interpres();
+ enum InstrType {
+    AddClass,
+    AddInstance,
+    EvaluateInstance,
+    ModifyClass,
+    ModifyInstance,
+    List,
+    Unrecognized
+  };
+  Interpres(MetaAction *recv);
   ~Interpres();
-  
-  bool runFile(const std::string &file, MetaAction *doer);
-  bool runInstruction(const std::string &instr, MetaAction *doer);
+
+  void setReceiver(MetaAction *recv);
+  void insertChecker(const std::tuple<std::function<bool(const std::string &, MetaAction *)>, InstrType> &checker);
+  void dumpInstructions(const std::string &file);
+
+  bool runFile(const std::string &file);
+  Interpres::InstrType executeInstruction(const std::string &instr);
+
 private:
-  std::list<std::function<bool(const std::string &, MetaAction *)>> checkers;
+  std::list<std::tuple<std::function<bool(const std::string &, MetaAction *)>, InstrType>> mCheckers;
+  std::list<std::string> mInstrQueue;
+  MetaAction *mReceiver;
 };
 
 #endif

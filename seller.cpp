@@ -1,12 +1,15 @@
 #include "seller.hpp"
 
 Seller::Seller(const std::string &ldFile) {
+  transi = new Interpres(this);
+  
   // apply a instruction file to the app instance
   std::cout << " Genetic system preloading ..." << std::endl;
-  transi.runFile(ldFile, this);
+  transi->runFile(ldFile);
 }
 
 Seller::~Seller() {
+  delete transi;
   this->instanceClasses.clear();
   this->instanceObjects.clear();
 }
@@ -127,7 +130,7 @@ void Seller::run() {
   do{
     if(command == "help"){
       printHelpMenu();
-    } else if(!transi.runInstruction(command, this)){
+    } else if(transi->executeInstruction(command) == Interpres::InstrType::Unrecognized){
       std::cout << "I didn't quite get that, can you try again please ? ..." << std::endl;
     }
     

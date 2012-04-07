@@ -29,7 +29,7 @@ public:
   void run();
 
 protected:
-  Interpres transi;
+  Interpres *transi;
   std::list<GenericClass *> instanceClasses;
   std::list<GenericInstance *> instanceObjects;
 };

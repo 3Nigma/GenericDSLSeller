@@ -1,5 +1,4 @@
 #include "genericclass.hpp"
-#include <iostream>
 
 GenericClass::GenericClass(const std::string &name) 
   : mName(name) {
