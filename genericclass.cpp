@@ -7,7 +7,7 @@ GenericClass::GenericClass(const std::string &name)
 GenericClass::GenericClass(const GenericClass *gcCopy)
   : mName(gcCopy->mName), mEvalRule(gcCopy->mEvalRule) {
   std::for_each(gcCopy->mProperties.begin(), gcCopy->mProperties.end(), [&](GenericProperty *p) {
-      this->mProperties.push_back(new GenericProperty(p));
+      this->mProperties.push_back(p->clone());
     });
   //std::for_each(gcCopy->mParents.begin(), gcCopy->mParents.end(), [&](GenericClass *p) {
   //    this->mParents.push_back(new GenericClass(p));

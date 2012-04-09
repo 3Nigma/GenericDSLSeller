@@ -44,7 +44,7 @@ void GenericInstance::propagateUpdatedClass(GenericClass *gc) {
 	if(std::find_if(this->getProperties().begin(), this->getProperties().end(), [&](GenericProperty *gpits){
 	      return (*gpit) == (*gpits);
 	    }) == this->getProperties().end()){
-	  this->getProperties().push_back(new GenericProperty(gpit));
+	  this->getProperties().push_back(gpit->clone());
 	}
       }
     } else {
@@ -66,7 +66,7 @@ double GenericInstance::evaluateRule() {
   if(nullptr == lstate) throw EvaluatorException();
   else{
     //std::cout << std::string("eres = ") + expandRule() << std::endl;
-    if(luaL_dostring(lstate, (std::string("eres = ") + expandRule()).c_str()) != 0){
+    if(luaL_dostring(lstate, ((std::string("eres = ") + this->setRuleEnvironment(lstate)).c_str())) != 0){
       lua_close(lstate);
       throw EvaluatorException();
     } else {
@@ -84,27 +84,29 @@ double GenericInstance::evaluateRule() {
   return evalResult;
 }
 
-std::string GenericInstance::expandRule() {
+std::string GenericInstance::setRuleEnvironment(lua_State *l) {
   std::string composedRule = mEvalRule;
   
-  // expand parents
+  // evaluate parents
   if(mInstanceParents.size() != 0){
     std::for_each(mInstanceParents.begin(), mInstanceParents.end(), [&composedRule](GenericInstance *gi){
 	std::string parentNameToken = std::string("<") + gi->getClassName() + std::string(">");
 	size_t start_pos = composedRule.find(parentNameToken);
 	if(start_pos != std::string::npos){
-	  std::string parentRule = std::string("(") + gi->expandRule() + std::string(")");
-	  composedRule.replace(start_pos, parentNameToken.length(), parentRule);
+	  std::string parentValue = std::to_string(gi->evaluateRule());
+	  composedRule.replace(start_pos, parentNameToken.length(), parentValue);
 	}
       });
   }
   
-  // expand properties
-  std::for_each(mProperties.begin(), mProperties.end(), [&composedRule](GenericProperty *gp){
-      size_t start_pos = composedRule.find(gp->getName());
-      if(start_pos != std::string::npos){
-	composedRule.replace(start_pos, gp->getName().length(), gp->getFormattedStringVal());
-      }
+  // integrate properties
+  std::for_each(mProperties.begin(), mProperties.end(), [&l](GenericProperty *gp){
+      gp->dumpToLua(l);
+      /* size_t start_pos = composedRule.find(gp->getName());
+	 if(start_pos != std::string::npos){
+	 composedRule.replace(start_pos, gp->getName().length(), gp->getFormattedStringVal());
+	 }
+      */
     });
   
   return composedRule;

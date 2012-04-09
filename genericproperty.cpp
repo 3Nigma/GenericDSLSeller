@@ -14,14 +14,6 @@ bool GenericProperty::operator==(const GenericProperty &rhs) const{
 
 std::tuple<std::string, std::string> GenericProperty::get() {
   return mProperty;
-}
-
-std::string GenericProperty::getFormattedStringVal() {
-  return std::get<1>(mProperty);
-}
-
-void GenericProperty::setValue(const std::string &newVal) {
-  std::get<1>(mProperty) = newVal;
 } 
 
 std::string GenericProperty::getName() const {
@@ -29,5 +21,6 @@ std::string GenericProperty::getName() const {
 }
 
 void GenericProperty::set(std::tuple<std::string, std::string> &rhs) {
-  this->mProperty = rhs;
+  std::get<0>(this->mProperty) = std::get<0>(rhs);
+  this->setValue(std::get<1>(rhs));
 }

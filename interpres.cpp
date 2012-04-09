@@ -13,16 +13,21 @@ Interpres::Interpres(MetaAction *recv)
 	  GenericClass *newClass = new GenericClass(captures[1]);
 	
 	  std::string propList(captures[3]);
-	  boost::regex propExpr("\\b(\\w+)\\b *(?:\\( *([0-9\\.]+) *\\))?");
+	  boost::regex propExpr("\\b(\\w+)\\b *(?:\\( *(?i)(numerical|string) *\\))");
 	  boost::sregex_iterator m1(propList.begin(), propList.end(), propExpr);
 	  boost::sregex_iterator m2;
 	  std::for_each(m1, m2, [&newClass](const boost::smatch &m) -> bool{
-	      // (1) = PropertyName, (2 - OPT) = Initial value
+	      // (1) = PropertyName, (2) = PropertyType {"numerical", "string"} case insensitive
 	      std::string propName = m[1];
-	      std::string propValue = m[2];
-	      if(propValue.length() == 0)
-		propValue = "0.0";
-	      newClass->addProperty(new GenericProperty(propName, propValue));
+	      std::string propType = m[2];
+
+	      std::transform(propType.begin(), propType.end(), propType.begin(), ::tolower);	      
+	      if("numerical" == propType) {
+		newClass->addProperty(new NumericalProperty(propName));
+	      } else if("string" == propType) {
+		
+	      }
+
 	      return true;
 	    });
 	  
@@ -58,6 +63,7 @@ Interpres::Interpres(MetaAction *recv)
 	    if(propValue.length() == 0)
 	      throw BadPropertyValueException();
 	    newInst->modifyPropertyValue(propName, propValue);
+
 	    return true;
 	  });
 
@@ -110,7 +116,7 @@ Interpres::Interpres(MetaAction *recv)
 	      if(captures.str(2) == "erasing") {
 		gc->removeProperty(propName);
 	      } else if(captures.str(2) == "adding") {
-		gc->addProperty(new GenericProperty(propName, propValue));
+		gc->addProperty(new NumericalProperty(propName, propValue));
 	      }
 	      
 	      return true;

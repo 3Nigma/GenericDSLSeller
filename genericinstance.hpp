@@ -25,7 +25,7 @@ protected:
   std::string mInstanceName;
   std::list<GenericInstance *> mInstanceParents;
 
-  std::string expandRule();
+  std::string setRuleEnvironment(lua_State *l);
   virtual GenericProperty *findDeepProperty(const std::string &pName);
 };
 

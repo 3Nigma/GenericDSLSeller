@@ -9,6 +9,7 @@
 #include <boost/regex.hpp>
 
 #include "metaaction.hpp"
+#include "numericalproperty.hpp"
 
 class Interpres{
 public:
