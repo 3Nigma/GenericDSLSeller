@@ -5,6 +5,7 @@ CXFLAGS = -Wall -g -std=c++0x
 LDXFLAGS = -llua5.1 -lboost_regex
 OBJS = genericproperty.o \
 numericalproperty.o \
+stringproperty.o \
 genericclass.o \
 genericinstance.o \
 seller.o \

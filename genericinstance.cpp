@@ -66,11 +66,12 @@ double GenericInstance::evaluateRule() {
   if(nullptr == lstate) throw EvaluatorException();
   else{
     //std::cout << std::string("eres = ") + expandRule() << std::endl;
-    if(luaL_dostring(lstate, ((std::string("eres = ") + this->setRuleEnvironment(lstate)).c_str())) != 0){
+    luaL_openlibs(lstate);
+    if(luaL_dostring(lstate, this->setRuleEnvironment(lstate).c_str()) != 0){
       lua_close(lstate);
       throw EvaluatorException();
     } else {
-      lua_getglobal(lstate, "eres");
+      lua_getglobal(lstate, "result");
       if(lua_isnumber(lstate, -1) != 1){
 	lua_close(lstate);
 	throw EvaluatorException();

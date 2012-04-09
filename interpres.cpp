@@ -25,7 +25,9 @@ Interpres::Interpres(MetaAction *recv)
 	      if("numerical" == propType) {
 		newClass->addProperty(new NumericalProperty(propName));
 	      } else if("string" == propType) {
-		
+		newClass->addProperty(new StringProperty(propName));
+	      } else {
+		throw BadPropertyTypeException();
 	      }
 
 	      return true;
@@ -51,15 +53,16 @@ Interpres::Interpres(MetaAction *recv)
       if(boost::regex_match(instr, captures, c, boost::match_extra)){
 	// (1) = ClassName, (2) = InstanceName, (3) = Property list
 	GenericInstance *newInst = env->makeInstance(captures[1], captures[2]);
-	
-	std::string propList(captures[3]);
-	boost::regex propExpr("\\b(\\w+)\\b *(?:\\( *([0-9\\.]+) *\\))?");
+       	std::string propList(captures[3]);
+	boost::regex propExpr("\\b(\\w+)\\b *(?:\\( *(.+?) *\\))");
 	boost::sregex_iterator m1(propList.begin(), propList.end(), propExpr);
 	boost::sregex_iterator m2;
+
 	std::for_each(m1, m2, [&newInst](const boost::smatch &m) -> bool{
 	    // (1) = PropertyName, (2) = value
 	    std::string propName = m[1];
 	    std::string propValue = m[2];
+
 	    if(propValue.length() == 0)
 	      throw BadPropertyValueException();
 	    newInst->modifyPropertyValue(propName, propValue);
@@ -103,20 +106,25 @@ Interpres::Interpres(MetaAction *recv)
 	  gc->setEvalRule(captures.str(3));
 	} else {
 	  std::string propList(captures[3]);
-	  boost::regex propExpr("\\b(\\w+)\\b *(?:\\( *([0-9\\.]+) *\\))?");
+	  boost::regex propExpr("\\b(\\w+)\\b *(?:\\( *(?i)(numerical|string) *\\))?");
 	  boost::sregex_iterator m1(propList.begin(), propList.end(), propExpr);
 	  boost::sregex_iterator m2;
 	  std::for_each(m1, m2, [&](const boost::smatch &m) -> bool{
-	      // (1) = PropertyName, (2) = value
+	      // (1) = PropertyName, (2) = PropertyType {"numerical", "string"} case insensitive
 	      std::string propName = m[1];
-	      std::string propValue = m[2];
+	      std::string propType = m[2];
 
-	      if(propValue.length() == 0)
-		propValue = "0.0";
+	      std::transform(propType.begin(), propType.end(), propType.begin(), ::tolower);
 	      if(captures.str(2) == "erasing") {
 		gc->removeProperty(propName);
 	      } else if(captures.str(2) == "adding") {
-		gc->addProperty(new NumericalProperty(propName, propValue));
+		if(propType == "numerical") {
+		  gc->addProperty(new NumericalProperty(propName));
+		} else if(propType == "string") {
+		  gc->addProperty(new StringProperty(propName));
+		} else {
+		  throw BadPropertyTypeException();
+		}
 	      }
 	      
 	      return true;

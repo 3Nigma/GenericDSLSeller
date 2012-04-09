@@ -9,6 +9,7 @@ class ClassDoesNotExistException : std::exception { };
 class PropertyDoesNotExistException : std::exception { };
 class CannotEvaluateClassException : std::exception { };
 class BadPropertyValueException : std::exception { };
+class BadPropertyTypeException : std::exception { };
 class InstanceExistsException : std::exception { };
 class FileDoesNotExistException : std::exception { };
 class InstanceDoesNotExistException : std::exception { };

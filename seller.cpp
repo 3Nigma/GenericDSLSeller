@@ -106,16 +106,16 @@ void Seller::listInstances(std::list<std::string> instNames) {
 void Seller::printHelpMenu() {
   std::cout << "\033[1;36mAlright, here's what I understand :\033[0m" << std::endl
 	    << "\033[0;33m * Creating new stuff : \033[0m" << std::endl
-	    << "create class <newClassName> [inherits <className> ]with the following properties: <prop1>[(<defValue1>)][, ...[, <propN>[(<defValueN>)]]] and evaluates with '<evaluationRule>'" << std::endl
+	    << "create class <newClassName> [inherits <className> ]with the following properties: <prop1>[(numerical|string)][, ...[, <propN>[(numerical|string)]]] and evaluates with 'result = <evaluationRule>'" << std::endl
 	    << "\033[0;33m * Ordering existing items : \033[0m" << std::endl
-	    << "instantiate <existingClassName> in <instanceName> setting <prop1>(<defValue1>][, ...[, <propN>(<defValueN>)]]" << std::endl
+	    << "instantiate <existingClassName> in <instanceName> setting <prop1>(<startValue1>][, ...[, <propN>(<startValueN>)]]" << std::endl
 	    << "\033[0;33m * Custom tweak an item type : \033[0m" << std::endl
-	    << "update class <existingClassName> <'erasing'|'adding'> the following properties : <prop1>[(<defValue1>)][, ...[, <propN>[(<defValueN>)]]]" << std::endl
-	    << "update class <existingClassName> evaluating in : <newEvaluationRule>" << std::endl
+	    << "update class <existingClassName> <'erasing'|'adding'> the following properties : <prop1>[(numerical|string)][, ...[, <propN>[(numerical|string)]]]" << std::endl
+	    << "update class <existingClassName> evaluating in : result = <newEvaluationRule>" << std::endl
 	    << "\033[0;33m * Ask for the price of an ordered item : \033[0m" << std::endl
 	    << "evaluate <instanceName>" << std::endl
 	    << "\033[0;33m * Fine-tweak a property of an ordered item : \033[0m" << std::endl
-	    << "update instance <instanceName> setting property values : <prop1>[(<defValue1>)][, ...[, <propN>[(<defValueN>)]]]" << std::endl
+	    << "update instance <instanceName> setting property values : <prop1>[(<newValue1>)][, ...[, <propN>[(<newValueN>)]]]" << std::endl
 	    << "\033[0;33m * List ordered/available items : \033[0m" << std::endl
 	    << "list all <'instances'|'classes'>" << std::endl
 	    << "list following <'instances'|'classes'> : <token1>[, ...[, <tokenN>]]" << std::endl

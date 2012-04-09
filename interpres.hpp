@@ -10,6 +10,7 @@
 
 #include "metaaction.hpp"
 #include "numericalproperty.hpp"
+#include "stringproperty.hpp"
 
 class Interpres{
 public:
