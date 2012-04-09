@@ -11,17 +11,16 @@ public:
   GenericProperty(const std::string &name, const std::string &value = "0.0");
 
   bool operator==(const GenericProperty &rhs) const;
-  std::tuple<std::string, double> get();
-  void set(std::tuple<std::string, double> &rhs);
+  std::tuple<std::string, std::string> get();
+  void set(std::tuple<std::string, std::string> &rhs);
 
-  double getValue();
-  void setValue(double newVal); 
+  std::string getFormattedStringVal(); 
   void setValue(const std::string &newVal);
 
   std::string getName() const;
 
 protected:
-  std::tuple<std::string, double> mProperty;
+  std::tuple<std::string, std::string> mProperty;
 };
 
 #endif

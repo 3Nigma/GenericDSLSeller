@@ -57,7 +57,7 @@ Interpres::Interpres(MetaAction *recv)
 	    std::string propValue = m[2];
 	    if(propValue.length() == 0)
 	      throw BadPropertyValueException();
-	    newInst->modifyPropertyValue(propName, std::stof(propValue));
+	    newInst->modifyPropertyValue(propName, propValue);
 	    return true;
 	  });
 

@@ -47,7 +47,7 @@ void GenericClass::removeProperty(const std::string &propName) {
   }
 }
 
-void GenericClass::modifyPropertyValue(const std::string &propName, double newVal) {
+void GenericClass::modifyPropertyValue(const std::string &propName, const std::string &newVal) {
   bool propFound = false;
     
   GenericProperty *targetedProp = findDeepProperty(propName);
@@ -83,7 +83,7 @@ std::string GenericClass::inspect() {
   std::string result = std::string(" >> '") + this->getName() + std::string("' class with the following properties : \n");
   
   for(GenericProperty *gp : this->mProperties)
-    result += std::string("+ ") + gp->getName() + std::string(" defaults to : ") + std::to_string(gp->getValue()) + std::string("\n");
+    result += std::string("+ ") + gp->getName() + std::string(" defaults to : ") + gp->getFormattedStringVal() + std::string("\n");
   result += std::string("Evaluates with : '") + this->getEvalRule() + std::string("'");
   if(this->mParents.size() != 0){
     result += std::string(" and inherits from :\n | ");

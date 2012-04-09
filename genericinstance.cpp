@@ -103,7 +103,7 @@ std::string GenericInstance::expandRule() {
   std::for_each(mProperties.begin(), mProperties.end(), [&composedRule](GenericProperty *gp){
       size_t start_pos = composedRule.find(gp->getName());
       if(start_pos != std::string::npos){
-	composedRule.replace(start_pos, gp->getName().length(), std::to_string(gp->getValue()));
+	composedRule.replace(start_pos, gp->getName().length(), gp->getFormattedStringVal());
       }
     });
   
@@ -138,7 +138,7 @@ std::string GenericInstance::inspect() {
     std::string("' with the following properties : \n");
   
   for(GenericProperty *gp : this->mProperties)
-    result += std::string("+ ") + gp->getName() + std::string(" = ") + std::to_string(gp->getValue()) + std::string("\n");
+    result += std::string("+ ") + gp->getName() + std::string(" = ") + gp->getFormattedStringVal() + std::string("\n");
   result += std::string("Evaluates with : '") + this->getEvalRule() + std::string("' = ") + std::to_string(this->evaluateRule());
   result += std::string("\n");
 

@@ -24,7 +24,7 @@ public:
   
   void addProperty(GenericProperty *gp);
   void removeProperty(const std::string &propName);
-  void modifyPropertyValue(const std::string &propName, double newVal);
+  void modifyPropertyValue(const std::string &propName, const std::string &newVal);
   void addDirectParent(GenericClass *gc);
   virtual std::string inspect();
   virtual double evaluateRule();
