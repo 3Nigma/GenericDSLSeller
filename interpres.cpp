@@ -146,7 +146,7 @@ Interpres::Interpres(MetaAction *recv)
       if(boost::regex_match(instr, captures, c, boost::match_extra)){
 	// (1) = ObjectName, (2) = Property list
 	std::string propList(captures[2]);
-	boost::regex propExpr("\\b(\\w+)\\b *(?:\\( *([0-9\\.]+) *\\))?");
+	boost::regex propExpr("\\b(\\w+)\\b *(?:\\( *(.+?) *\\))");
 	boost::sregex_iterator m1(propList.begin(), propList.end(), propExpr);
 	boost::sregex_iterator m2;
 	GenericInstance *obj = env->findInstanceByName(captures.str(1));
